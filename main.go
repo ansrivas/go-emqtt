@@ -8,17 +8,16 @@ import (
 )
 
 func publisher() {
-	mqttAdaptor := mqtt.NewAdaptorWithAuth("tcp://url:1883", "clientid", "username", "password")
+	mqttAdaptor := mqtt.NewAdaptorWithAuth("tcp://localhost:1883", "clientid", "username", "password")
 
-	// mqttAdaptor := mqtt
 	work := func() {
-		// mqttAdaptor.On("hello/world", func(msg mqtt.Message) {
-		// 	fmt.Println("hello message published")
-		// 	fmt.Println(msg.Payload())
-		//
-		// })
+		mqttAdaptor.On("hello/world", func(msg mqtt.Message) {
+			fmt.Println("hello message published")
+			fmt.Println(string(msg.Payload()))
 
-		gobot.Every(time.Microsecond, func() {
+		})
+
+		gobot.Every(time.Second, func() {
 			data := []byte(fmt.Sprintf("Hello world from golang %d", time.Now().UTC()))
 			mqttAdaptor.Publish("hello/world", data)
 		})
